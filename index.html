@@ -1,0 +1,87 @@
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Map api</title>
+	<style>
+		* {
+			margin: 0;
+			padding: 0;
+			border: 0 none;
+		}
+		#map {
+			float: left;
+			width: 80%;
+			height: 100%;
+		}
+		.sidebar {
+			display: inline-block;
+			float: left;
+			width: 20%;
+		}
+	</style>
+</head>
+<body>
+	
+	<div id="map"></div>
+	<div class="sidebar">
+		<ul></ul>
+	</div>
+
+	<script>
+		var markers = [];
+
+
+		function initMap() {
+			var myOptions = {
+		        center: new google.maps.LatLng(51.010101, 18.0101010),
+		        zoom: 8
+		    };
+
+			var map = new google.maps.Map(document.getElementById('map'), myOptions);
+			var geocoder = new google.maps.Geocoder;
+
+			function test3(){
+			    var test = 47.010101;
+			    var test2 = 15.010101;
+				var newArr = [];
+				for (var i = 0; i < 10; i++) {
+					markers.push(new google.maps.Marker({
+				        position: new google.maps.LatLng(test,test2),
+				        map: map,
+				        visible: true
+				    }));
+
+				    test++;
+				    test2++;
+
+					var bounds = map.getBounds();
+					var pos = markers[i].getPosition();
+
+					if ( bounds.contains(pos) ) {
+						geocoder.geocode({'location': pos}, function(results, status) {
+							if (status === 'OK') {
+								newArr.push(results[1].formatted_address);
+								var parent = document.querySelector('.sidebar ul');
+								var children = document.createElement('li');
+								
+								
+								newArr.forEach(function (text, index) {
+									clone = children.cloneNode();
+									clone.textContent = newArr[index];
+									parent.appendChild(clone);
+								});
+							}
+				        });
+					}
+				}
+			}
+		    google.maps.event.addListener(map,'bounds_changed', function(){
+		    	test3();
+		    })
+		}
+
+
+	</script>
+	<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA6YdoaHpYnN9eaO9gr2oEhqvhcLsVnctQ&callback=initMap"></script>
+</body>
+</html>
